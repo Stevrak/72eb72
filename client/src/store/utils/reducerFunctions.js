@@ -13,11 +13,24 @@ export const addMessageToStore = (state, payload) => {
 
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
+<<<<<<< HEAD
+<<<<<<< Updated upstream
       return {id:convo.id,
               latestMessageText:message.text,
               otherUser:convo.otherUser,
               messages:[message,...convo.messages]
             }
+=======
+      const convoCopy = { ...convo };
+      convoCopy.messages.push(message);
+      convoCopy.latestMessageText = message.text;
+      return convoCopy;
+>>>>>>> Stashed changes
+=======
+      convo.messages.push(message);
+      convo.latestMessageText = message.text;
+      return convo;
+>>>>>>> parent of 8b7a581 (fixed message bugs (not showing, wrong order))
     } else {
       return convo;
     }
@@ -70,12 +83,28 @@ export const addSearchedUsersToStore = (state, users) => {
 
 export const addNewConvoToStore = (state, recipientId, message) => {
   return state.map((convo) => {
+
     if (convo.otherUser.id === recipientId) {
+<<<<<<< HEAD
+<<<<<<< Updated upstream
       return {
               id:message.conversationId,
               otherUser:convo.otherUser,
               messages:[message],
               latestMessageText:message.text}
+=======
+      const convoCopy = { ...convo };
+      convoCopy.id = message.conversationId;
+      convoCopy.messages.push(message);
+      convoCopy.latestMessageText = message.text;
+      return convoCopy;
+>>>>>>> Stashed changes
+=======
+      convo.id = message.conversationId;
+      convo.messages.push(message);
+      convo.latestMessageText = message.text;
+      return convo;
+>>>>>>> parent of 8b7a581 (fixed message bugs (not showing, wrong order))
     } else {
       return convo;
     }
