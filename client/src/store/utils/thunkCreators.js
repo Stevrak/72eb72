@@ -91,21 +91,15 @@ const sendMessage = (data, body) => {
   });
 };
 
+// ticket 1: set function to wait for saveMessage so undefined values not passed
+// to redux functions
+
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => (dispatch) => {
+export const postMessage = (body) => async (dispatch) => {
   try {
-<<<<<<< HEAD
     const data = await saveMessage(body);
-<<<<<<< Updated upstream
     
-=======
-
->>>>>>> Stashed changes
-=======
-    const data = saveMessage(body);
-
->>>>>>> parent of 8b7a581 (fixed message bugs (not showing, wrong order))
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
