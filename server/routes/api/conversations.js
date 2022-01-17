@@ -18,10 +18,10 @@ router.get("/", async (req, res, next) => {
           user2Id: userId,
         },
       },
-      attributes: ["id"],
-      order: [[Message, "createdAt", "DESC"]],
+      attributes: ["id", "unread"],
+      order: [[Message, "createdAt", "ASC"]],
       include: [
-        { model: Message, order: ["createdAt", "DESC"] },
+        { model: Message, order: ["createdAt", "ASC"] },
         {
           model: User,
           as: "user1",
@@ -51,6 +51,9 @@ router.get("/", async (req, res, next) => {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
+      // ticket 2: when tracking read, only send back value for this user
+      convoJSON.unread = convoJSON.unread[!convoJSON.user1?0:1]
+
       // set a property "otherUser" so that frontend will have easier access
       if (convoJSON.user1) {
         convoJSON.otherUser = convoJSON.user1;
@@ -68,7 +71,7 @@ router.get("/", async (req, res, next) => {
       }
 
       // set properties for notification count and latest message preview
-      convoJSON.latestMessageText = convoJSON.messages[0].text;
+      convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length-1].text;
       conversations[i] = convoJSON;
     }
 

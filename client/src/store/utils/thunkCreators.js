@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  readConversation
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -93,9 +94,9 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => (dispatch) => {
+export const postMessage = (body) => async (dispatch) => {
   try {
-    const data = saveMessage(body);
+    const data = await saveMessage(body);
 
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
@@ -113,6 +114,15 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/users/${searchTerm}`);
     dispatch(setSearchedUsers(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const readChat = (conversationId) => async (dispatch) => {
+  try {
+    await axios.post("/api/messages/markread", {conversationId});
+    dispatch(readConversation(conversationId))
   } catch (error) {
     console.error(error);
   }
