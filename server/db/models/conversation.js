@@ -6,20 +6,17 @@ const Conversation = db.define("conversation", {});
 
 // find conversation given two user Ids
 
-Conversation.findConversation = async function (user1Id, user2Id) {
-  const conversation = await Conversation.findOne({
+Conversation.findConversation = async function (user1Id,user1Id) {
+  const conversations = await Conversation.find({
     where: {
-      user1Id: {
-        [Op.or]: [user1Id, user2Id]
-      },
-      user2Id: {
-        [Op.or]: [user1Id, user2Id]
+      users: {
+        [Op.in]: [users1Id, user2Id]
       }
     }
   });
 
   // return conversation or null if it doesn't exist
-  return conversation;
+  return conversations;
 };
 
 module.exports = Conversation;
