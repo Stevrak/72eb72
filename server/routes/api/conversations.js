@@ -52,16 +52,18 @@ router.get("/", async (req, res, next) => {
       const convoJSON = convo.toJSON();
 
       // ticket 2: when tracking read, only send back value for this user
+
+      convoJSON.unseen = convoJSON.unread[!convoJSON.user1?1:0]
       convoJSON.unread = convoJSON.unread[!convoJSON.user1?0:1]
 
       // set a property "otherUser" so that frontend will have easier access
-      if (convoJSON.user1) {
+      if (convoJSON.user1)
         convoJSON.otherUser = convoJSON.user1;
-        delete convoJSON.user1;
-      } else if (convoJSON.user2) {
+      else if (convoJSON.user2)
         convoJSON.otherUser = convoJSON.user2;
-        delete convoJSON.user2;
-      }
+
+      delete convoJSON.user1;
+      delete convoJSON.user2;
 
       // set property for online status of the other user
       if (onlineUsers.includes(convoJSON.otherUser.id)) {

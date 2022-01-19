@@ -23,7 +23,6 @@ const adjustUnread = async ({userId, conversationId, conversation, clear}) => {
   }
 }
 
-
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
 router.post("/", async (req, res, next) => {
   try {
@@ -62,7 +61,7 @@ router.post("/", async (req, res, next) => {
     });
 
     await adjustUnread({userId:recipientId, conversation})
-    res.json({ message, sender });
+    res.json({ message, senderId });
   } catch (error) {
     next(error);
   }
@@ -70,7 +69,7 @@ router.post("/", async (req, res, next) => {
 
 // Ticket 2, read reciepts sent when messeges viewed
 // expects {conversationId} in body
-router.post("/markread", async (req, res, next) => {
+router.put("/read", async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
@@ -79,7 +78,7 @@ router.post("/markread", async (req, res, next) => {
     const { conversationId } = req.body;
 
     await adjustUnread({userId:id, conversationId, clear:true})
-    res.json({message:`${username} read convo ${conversationId}`});
+    res.sendStatus(204);
 
   } catch (error) {
     next(error);

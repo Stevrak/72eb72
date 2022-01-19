@@ -26,10 +26,12 @@ const ActiveChat = (props) => {
   const { readChat, user } = props;
   const conversation = props.conversation || {};
 
-  useEffect(async ()=>{
-    if (conversation.unread > 0)
-      await readChat(conversation.id)
-  },[conversation])
+  useEffect(()=>{
+    if (conversation.unread > 0){
+      console.log("conversation triggered readChat",conversation)
+      readChat(conversation.id, user.id)
+    }
+  },[conversation,readChat,user])
 
   return (
     <Box className={classes.root}>
@@ -44,6 +46,7 @@ const ActiveChat = (props) => {
               messages={conversation.messages}
               otherUser={conversation.otherUser}
               userId={user.id}
+              unseen={conversation.unseen}
             />
             <Input
               otherUser={conversation.otherUser}
@@ -70,8 +73,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    readChat: (conversationId) => {
-      dispatch(readChat(conversationId));
+    readChat: (conversationId,userId) => {
+      dispatch(readChat(conversationId,userId));
     }
   };
 };

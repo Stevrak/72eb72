@@ -70,10 +70,10 @@ export const addConversation = (recipientId, newMessage) => {
 };
 
 // signal user has read new messages in conversation
-export const readConversation = (conversationId) => {
+export const readConversation = (conversationId, userId) => {
   return {
     type: READ_CONVERSATION,
-    conversationId
+    payload: { conversationId, userId }
   };
 };
 
@@ -104,7 +104,8 @@ const reducer = (state = [], action) => {
     case READ_CONVERSATION:
       return setReadConversation(
         state,
-        action.conversationId
+        action.payload.conversationId,
+        action.payload.userId
       );
     default:
       return state;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Badge, Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
@@ -17,23 +17,8 @@ const useStyles = makeStyles((theme) => ({
       cursor: "grab"
     }
   },
-  unread: {
-    marginRight:20,
-    background: "#3F92FF",
-    borderRadius: "14px",
-    minWidth:20,
-    maxHeight:20,
-    textAlign:"center",
-    padding:"5px 2px 5px 2px",
-  },
-  unreadText: {
-    fontFamily:"Open Sans",
-    fontSize: "10px",
-    fontWeight: "700",
-    color: "#FFFFFF",
-    letterSpacing: "-0.5px",
-    margin: "0px 5px",
-    lineHeight:1
+  badge: {
+    right:30,
   },
 }));
 
@@ -55,14 +40,12 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      {conversation.unread>0 &&
-      <Box className={classes.unread}>
-        <Typography className={classes.unreadText}>
-          {conversation.unread}
-        </Typography>
-      </Box>
-      }
-    </Box>
+      <Badge
+        badgeContent={conversation.unread}
+        className={classes.badge}
+        color="primary"
+      />
+</Box>
   );
 };
 
@@ -75,3 +58,9 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(null, mapDispatchToProps)(Chat);
+
+/*
+<Typography className={classes.unreadText}>
+  {conversation.unread}
+</Typography>
+*/

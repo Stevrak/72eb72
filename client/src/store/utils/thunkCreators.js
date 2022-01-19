@@ -103,7 +103,6 @@ export const postMessage = (body) => async (dispatch) => {
     } else {
       dispatch(setNewMessage(data.message));
     }
-
     sendMessage(data, body);
   } catch (error) {
     console.error(error);
@@ -119,10 +118,11 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const readChat = (conversationId) => async (dispatch) => {
+export const readChat = (conversationId, userId) => async (dispatch) => {
   try {
-    await axios.post("/api/messages/markread", {conversationId});
-    dispatch(readConversation(conversationId))
+    await axios.put("/api/messages/read", {conversationId});
+    socket.emit("read",{ conversationId:conversationId, userId:userId });
+    dispatch(readConversation(conversationId, userId))
   } catch (error) {
     console.error(error);
   }

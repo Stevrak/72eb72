@@ -13,12 +13,17 @@ export const addMessageToStore = (state, payload) => {
 
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
+      if (convo.messages.find(m=>m.id == message.id)){
+        console.log("duplicate message from socket",message);
+        return convo;
+      }
       const convoCopy = { ...convo };
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
-      convoCopy.unread = message.senderId === convo.otherUser.id
-                          ?convo.unread+1:
-                          convo.unread;
+      if (message.senderId === convo.otherUser.id)
+        convoCopy.unread += 1;
+      else
+        convoCopy.unseen += 1;
       return convoCopy;
     } else {
       return convo;
@@ -77,6 +82,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
       convoCopy.id = message.conversationId;
       convoCopy.messages.push(message);
       convoCopy.unread = 0;
+      convoCopy.unseen = 0;
       convoCopy.latestMessageText = message.text;
       return convoCopy;
     } else {
@@ -85,11 +91,16 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
 };
 
-export const setReadConversation = (state, conversationId) => {
+// either we trigger, or socket emit from other user triggers
+// so confirm which user to trigger unseen or unread
+export const setReadConversation = (state, conversationId, userId) => {
   return state.map((convo) =>{
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
-      convoCopy.unread = 0;
+      if (userId === convo.otherUser.id)
+        convoCopy.unseen = 0;
+      else
+        convoCopy.unread = 0;
       return convoCopy;
     } else {
       return convo;
