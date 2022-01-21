@@ -135,8 +135,6 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
 };
 
-// either we trigger, or socket emit from other user triggers
-// so confirm which user to trigger unseen or unread
 export const setReadConversation = (state, conversationId, userId) => {
   return state.map((convo) => {
     if (convo.id === conversationId) {
