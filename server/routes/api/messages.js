@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { Conversation, Message } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
+const { Op } = require("sequelize");
 
 // increment or clear unread count for a user in conversation
 const adjustUnread = async ({userId, conversationId, conversation, clear}) => {
