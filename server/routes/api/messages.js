@@ -6,7 +6,15 @@ const onlineUsers = require("../../onlineUsers");
 const adjustUnread = async ({userId, conversationId, conversation, clear}) => {
   try {
     if (!conversation)
-      conversation = await Conversation.findOne({where:{id:conversationId}})
+      conversation = await Conversation.findOne({
+        where:{
+          id:conversationId,
+          [Op.or]: {
+            user1Id: userId,
+            user2Id: userId,
+          }
+        }
+      })
     const urIndex = conversation.user1Id == userId? 0 : 1;
     // to ensure psql picks up that unread array is actually changed and updates
     // reassign array then update with new copy.
@@ -67,14 +75,13 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// Ticket 2, read reciepts sent when messeges viewed
 // expects {conversationId} in body
 router.put("/read", async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
     }
-    const { id, username } = req.user;
+    const { id } = req.user;
     const { conversationId } = req.body;
 
     await adjustUnread({userId:id, conversationId, clear:true})

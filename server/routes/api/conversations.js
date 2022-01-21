@@ -51,8 +51,6 @@ router.get("/", async (req, res, next) => {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
-      // ticket 2: when tracking read, only send back value for this user
-
       convoJSON.unseen = convoJSON.unread[!convoJSON.user1?1:0]
       convoJSON.unread = convoJSON.unread[!convoJSON.user1?0:1]
 

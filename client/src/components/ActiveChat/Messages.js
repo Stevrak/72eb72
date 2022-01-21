@@ -13,24 +13,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-// returns id of message other member has seen last
-const getLastSeen = (messages, userId, unseen) => {
-    if (!messages) return;
-    for( let i = messages.length-1;i>=0;i--){
-        if (messages[i].senderId === userId){
-          if (unseen === 0)
-            return messages[i].id;
-          else
-            unseen--;
-        }
-    }
-}
-
 const Messages = (props) => {
   const classes = useStyles();
-  const { messages, otherUser, userId, unseen } = props;
-  const lastSeen = getLastSeen( messages, userId, unseen)
-
+  const { messages, otherUser, userId, lastSeen } = props;
   return (
     <Box>
       {messages.map((message) => {

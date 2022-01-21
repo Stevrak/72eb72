@@ -27,10 +27,8 @@ const ActiveChat = (props) => {
   const conversation = props.conversation || {};
 
   useEffect(()=>{
-    if (conversation.unread > 0){
-      console.log("conversation triggered readChat",conversation)
+    if (conversation.unread > 0)
       readChat(conversation.id, user.id)
-    }
   },[conversation,readChat,user])
 
   return (
@@ -46,7 +44,7 @@ const ActiveChat = (props) => {
               messages={conversation.messages}
               otherUser={conversation.otherUser}
               userId={user.id}
-              unseen={conversation.unseen}
+              lastSeen={conversation.lastSeen}
             />
             <Input
               otherUser={conversation.otherUser}

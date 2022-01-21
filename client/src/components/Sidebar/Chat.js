@@ -58,9 +58,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(null, mapDispatchToProps)(Chat);
-
-/*
-<Typography className={classes.unreadText}>
-  {conversation.unread}
-</Typography>
-*/
