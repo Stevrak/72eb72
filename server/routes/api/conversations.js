@@ -18,7 +18,7 @@ router.get("/", async (req, res, next) => {
           user2Id: userId,
         },
       },
-      attributes: ["id"],
+      attributes: ["id", "unread"],
       order: [[Message, "createdAt", "ASC"]],
       include: [
         { model: Message, order: ["createdAt", "ASC"] },
@@ -51,14 +51,17 @@ router.get("/", async (req, res, next) => {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
+      convoJSON.unseen = convoJSON.unread[!convoJSON.user1?1:0]
+      convoJSON.unread = convoJSON.unread[!convoJSON.user1?0:1]
+
       // set a property "otherUser" so that frontend will have easier access
-      if (convoJSON.user1) {
+      if (convoJSON.user1)
         convoJSON.otherUser = convoJSON.user1;
-        delete convoJSON.user1;
-      } else if (convoJSON.user2) {
+      else if (convoJSON.user2)
         convoJSON.otherUser = convoJSON.user2;
-        delete convoJSON.user2;
-      }
+
+      delete convoJSON.user1;
+      delete convoJSON.user2;
 
       // set property for online status of the other user
       if (onlineUsers.includes(convoJSON.otherUser.id)) {
